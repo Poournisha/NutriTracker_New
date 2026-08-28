@@ -379,14 +379,6 @@ OPENAI_API_KEY=
 
 ---
 
-# 👨‍💻 Demo Credentials
-
-### Admin Account
-
-```text
-Email: admin@nutrimeasure.ai
-Password: AdminPass123!
-```
 
 Users can also create a new account through the registration page.
 
