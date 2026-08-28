@@ -1,4 +1,3 @@
-```python
 import os
 from flask import Flask, send_from_directory
 from app.config import Config
@@ -85,4 +84,3 @@ def create_app(config_class=Config):
         }, 500
 
     return app
-```
