@@ -1,0 +1,21 @@
+food_name,category,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,iron_per_100g,calcium_per_100g
+Rice,Main,130.0,2.7,28.0,0.3,0.2,10.0
+Curd Rice,Main,145.0,3.5,22.0,4.5,0.3,110.0
+Lemon Rice,Main,165.0,3.0,30.0,4.0,0.8,25.0
+Tomato Rice,Main,155.0,2.8,29.0,3.5,0.9,20.0
+Sambar,Curry,75.0,3.8,11.0,2.0,1.2,35.0
+Rasam,Soup,40.0,1.2,6.0,1.5,0.8,15.0
+Dal,Curry,115.0,6.8,18.0,2.5,2.1,28.0
+Vegetable Curry,Curry,90.0,2.5,12.0,3.8,1.5,45.0
+Potato Curry,Curry,120.0,2.2,20.0,4.2,0.8,20.0
+Chapati,Bread,260.0,8.0,50.0,3.5,3.0,40.0
+Dosa,Breakfast,185.0,4.5,29.0,6.0,1.1,25.0
+Idli,Breakfast,130.0,4.0,26.0,0.5,0.6,20.0
+Poori,Breakfast,300.0,5.5,38.0,15.0,2.2,30.0
+Vada,Snack,270.0,7.5,25.0,16.0,2.0,35.0
+Curd,Dairy,60.0,3.2,4.5,3.3,0.1,120.0
+Milk,Dairy,65.0,3.4,4.8,3.6,0.05,125.0
+Banana,Fruit,89.0,1.1,23.0,0.3,0.3,5.0
+Apple,Fruit,52.0,0.3,14.0,0.2,0.1,6.0
+Egg,Protein,155.0,13.0,1.1,11.0,1.8,50.0
+Chicken,Protein,220.0,24.0,0.0,13.0,1.3,15.0

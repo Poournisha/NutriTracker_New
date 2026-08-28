@@ -1,0 +1,27 @@
+path: ../dataset
+train: images/train
+val: images/val
+test: images/test
+
+nc: 20
+names:
+  0: Rice
+  1: Curd Rice
+  2: Lemon Rice
+  3: Tomato Rice
+  4: Sambar
+  5: Rasam
+  6: Dal
+  7: Vegetable Curry
+  8: Potato Curry
+  9: Chapati
+  10: Dosa
+  11: Idli
+  12: Poori
+  13: Vada
+  14: Curd
+  15: Milk
+  16: Banana
+  17: Apple
+  18: Egg
+  19: Chicken
