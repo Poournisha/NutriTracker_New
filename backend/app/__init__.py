@@ -1,8 +1,10 @@
+```python
 import os
 from flask import Flask, send_from_directory
 from app.config import Config
 from app.extensions import db, cors
 from app.ml.model_manager import model_manager
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -10,7 +12,20 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     db.init_app(app)
-    cors.init_app(app, resources={r"/api/*": {"origins": app.config['CORS_ORIGINS']}})
+
+    # ---------------------------------------------------------
+    # CORS CONFIGURATION
+    # Allow the deployed Vercel frontend to access Flask API
+    # ---------------------------------------------------------
+    cors.init_app(
+        app,
+        resources={
+            r"/*": {
+                "origins": app.config["CORS_ORIGINS"]
+            }
+        },
+        supports_credentials=True
+    )
 
     # Initialize ML Model Manager
     with app.app_context():
@@ -42,16 +57,32 @@ def create_app(config_class=Config):
     # Serve static uploaded files
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
-        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+        return send_from_directory(
+            app.config['UPLOAD_FOLDER'],
+            filename
+        )
 
     # Global error handlers
     @app.errorhandler(404)
     def not_found_error(error):
-        return {"success": False, "error": {"code": "NOT_FOUND", "message": "Requested endpoint not found."}}, 404
+        return {
+            "success": False,
+            "error": {
+                "code": "NOT_FOUND",
+                "message": "Requested endpoint not found."
+            }
+        }, 404
 
     @app.errorhandler(500)
     def internal_error(error):
         db.session.rollback()
-        return {"success": False, "error": {"code": "INTERNAL_SERVER_ERROR", "message": "An internal server error occurred."}}, 500
+        return {
+            "success": False,
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "Internal server error occurred."
+            }
+        }, 500
 
     return app
+```
