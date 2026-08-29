@@ -15,14 +15,11 @@ def create_app(config_class=Config):
     # ---------------------------------------------------------
     db.init_app(app)
 
-    # ---------------------------------------------------------
-    # CORS CONFIGURATION
-    # ---------------------------------------------------------
     cors.init_app(
         app,
         resources={
-            r"/*": {
-                "origins": app.config["CORS_ORIGINS"]
+            r"/api/*": {
+                "origins": app.config['CORS_ORIGINS']
             }
         },
         supports_credentials=True
@@ -60,27 +57,29 @@ def create_app(config_class=Config):
     app.register_blueprint(admin_bp)
 
     # ---------------------------------------------------------
-    # IMPORT ALL DATABASE MODELS
+    # LOAD ALL DATABASE MODELS
     # ---------------------------------------------------------
-    from app.models.user import User
-    from app.models.food import Food
-    from app.models.meal import Meal
-    from app.models.meal_item import MealItem
-    from app.models.nutrition_target import NutritionTarget
-    from app.models.recommendation import Recommendation
+    # app.models.__init__.py imports:
+    # User, FoodItem, Meal, MealItem,
+    # NutritionTarget, Recommendation
+    #
+    # Importing app.models registers all models with SQLAlchemy.
+    # This must happen BEFORE db.create_all().
+    # ---------------------------------------------------------
+    import app.models
 
     # ---------------------------------------------------------
-    # CREATE DATABASE TABLES
+    # CREATE SQLITE DATABASE TABLES
     # ---------------------------------------------------------
     with app.app_context():
         try:
             db.create_all()
             print("========================================")
-            print("DATABASE TABLES INITIALIZED")
+            print("✅ DATABASE TABLES INITIALIZED")
             print("========================================")
         except Exception as e:
             print("========================================")
-            print("DATABASE INITIALIZATION FAILED")
+            print("❌ DATABASE INITIALIZATION FAILED")
             print(f"Error: {e}")
             print("========================================")
 
@@ -95,7 +94,7 @@ def create_app(config_class=Config):
         )
 
     # ---------------------------------------------------------
-    # Global 404 error handler
+    # Global error handlers
     # ---------------------------------------------------------
     @app.errorhandler(404)
     def not_found_error(error):
@@ -107,9 +106,6 @@ def create_app(config_class=Config):
             }
         }, 404
 
-    # ---------------------------------------------------------
-    # Global 500 error handler
-    # ---------------------------------------------------------
     @app.errorhandler(500)
     def internal_error(error):
         db.session.rollback()
@@ -118,7 +114,7 @@ def create_app(config_class=Config):
             "success": False,
             "error": {
                 "code": "INTERNAL_SERVER_ERROR",
-                "message": "Internal server error occurred."
+                "message": "An internal server error occurred."
             }
         }, 500
 
