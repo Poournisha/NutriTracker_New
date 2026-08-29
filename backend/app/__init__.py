@@ -1,5 +1,6 @@
 import os
 from flask import Flask, send_from_directory
+
 from app.config import Config
 from app.extensions import db, cors
 from app.ml.model_manager import model_manager
@@ -9,7 +10,9 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Initialize extensions
+    # ---------------------------------------------------------
+    # Initialize database
+    # ---------------------------------------------------------
     db.init_app(app)
 
     # ---------------------------------------------------------
@@ -26,11 +29,15 @@ def create_app(config_class=Config):
         supports_credentials=True
     )
 
+    # ---------------------------------------------------------
     # Initialize ML Model Manager
+    # ---------------------------------------------------------
     with app.app_context():
         model_manager.init_app(app)
 
+    # ---------------------------------------------------------
     # Register blueprints
+    # ---------------------------------------------------------
     from app.routes.auth import auth_bp
     from app.routes.profile import profile_bp
     from app.routes.food import food_bp
@@ -53,7 +60,30 @@ def create_app(config_class=Config):
     app.register_blueprint(system_bp)
     app.register_blueprint(admin_bp)
 
+    # ---------------------------------------------------------
+    # IMPORT DATABASE MODELS
+    # This ensures SQLAlchemy knows about the models before
+    # db.create_all() is executed.
+    # ---------------------------------------------------------
+    from app.models.user import User
+    from app.models.meal import Meal
+    from app.models.nutrition_target import NutritionTarget
+    from app.models.recommendation import Recommendation
+
+    # ---------------------------------------------------------
+    # CREATE DATABASE TABLES
+    # ---------------------------------------------------------
+    with app.app_context():
+        try:
+            db.create_all()
+            print("✅ Database tables initialized successfully.")
+        except Exception as e:
+            print("❌ Database initialization failed:")
+            print(e)
+
+    # ---------------------------------------------------------
     # Serve static uploaded files
+    # ---------------------------------------------------------
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
         return send_from_directory(
@@ -61,7 +91,9 @@ def create_app(config_class=Config):
             filename
         )
 
-    # Global error handlers
+    # ---------------------------------------------------------
+    # Global 404 error handler
+    # ---------------------------------------------------------
     @app.errorhandler(404)
     def not_found_error(error):
         return {
@@ -72,9 +104,13 @@ def create_app(config_class=Config):
             }
         }, 404
 
+    # ---------------------------------------------------------
+    # Global 500 error handler
+    # ---------------------------------------------------------
     @app.errorhandler(500)
     def internal_error(error):
         db.session.rollback()
+
         return {
             "success": False,
             "error": {
