@@ -17,7 +17,6 @@ def create_app(config_class=Config):
 
     # ---------------------------------------------------------
     # CORS CONFIGURATION
-    # Allow the deployed Vercel frontend to access Flask API
     # ---------------------------------------------------------
     cors.init_app(
         app,
@@ -61,12 +60,12 @@ def create_app(config_class=Config):
     app.register_blueprint(admin_bp)
 
     # ---------------------------------------------------------
-    # IMPORT DATABASE MODELS
-    # This ensures SQLAlchemy knows about the models before
-    # db.create_all() is executed.
+    # IMPORT ALL DATABASE MODELS
     # ---------------------------------------------------------
     from app.models.user import User
+    from app.models.food import Food
     from app.models.meal import Meal
+    from app.models.meal_item import MealItem
     from app.models.nutrition_target import NutritionTarget
     from app.models.recommendation import Recommendation
 
@@ -76,13 +75,17 @@ def create_app(config_class=Config):
     with app.app_context():
         try:
             db.create_all()
-            print("✅ Database tables initialized successfully.")
+            print("========================================")
+            print("✅ DATABASE TABLES INITIALIZED")
+            print("========================================")
         except Exception as e:
-            print("❌ Database initialization failed:")
-            print(e)
+            print("========================================")
+            print("❌ DATABASE INITIALIZATION FAILED")
+            print("========================================")
+            print(f"Error: {e}")
 
     # ---------------------------------------------------------
-    # Serve static uploaded files
+    # Serve uploaded files
     # ---------------------------------------------------------
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
