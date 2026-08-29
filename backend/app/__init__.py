@@ -11,7 +11,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # ---------------------------------------------------------
-    # Initialize database
+    # Initialize extensions
     # ---------------------------------------------------------
     db.init_app(app)
 
@@ -76,16 +76,16 @@ def create_app(config_class=Config):
         try:
             db.create_all()
             print("========================================")
-            print("✅ DATABASE TABLES INITIALIZED")
+            print("DATABASE TABLES INITIALIZED")
             print("========================================")
         except Exception as e:
             print("========================================")
-            print("❌ DATABASE INITIALIZATION FAILED")
-            print("========================================")
+            print("DATABASE INITIALIZATION FAILED")
             print(f"Error: {e}")
+            print("========================================")
 
     # ---------------------------------------------------------
-    # Serve uploaded files
+    # Serve static uploaded files
     # ---------------------------------------------------------
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
